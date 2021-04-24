@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'AsyncYoutubeAPICall',
+    'AsyncUpdate',
     'YoutubeAPICall',
     'rest_framework',
     'django.contrib.admin',

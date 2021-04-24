@@ -6,4 +6,4 @@ from .models import Video
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Video
-        fields = ('title','description','thumbnailURL','PublishedOn','timeStamp')
+        fields = ('videoID', 'ChannelTitle','title','description','thumbnailURL','PublishedOn','timeStamp')
