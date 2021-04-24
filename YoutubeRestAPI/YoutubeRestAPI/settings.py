@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,11 +31,16 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+import environ
+# Setup Default values and casting to be used
+env = environ.Env(DEBUG=(bool, True))
+
+# read local .env file
+environ.Env.read_env()
+
 # Application definition
 
 INSTALLED_APPS = [
-    'AsyncUpdate',
-    'YoutubeAPICall',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'youtubesearch',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +88,7 @@ WSGI_APPLICATION = 'YoutubeRestAPI.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 
@@ -126,3 +135,22 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+from datetime import timedelta
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/'
+
+# If time zones are active (USE_TZ = True) define your local 
+CELERY_TIME_ZONE = 'Asia/Kolkata'# 
+# app.conf.enable_utc = False # so celery doesn't take utc by default
+# We're going to have our tasks rolling soon, so that will be handy
+
+CELERY_BEAT_SCHEDULE = {
+    'fetch_youtube_videos': { 
+         'task': 'youtubesearch.tasks.testing', 
+         'schedule': timedelta(seconds=5),
+    },
+}
