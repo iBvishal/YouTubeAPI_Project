@@ -3,6 +3,10 @@ from django.db import models
 from django.utils.timezone import now
 # Create your models here.
 class Video(models.Model):
+    
+    videoID = models.CharField(max_length=255)
+    ChannelTitle = models.CharField(max_length=255)
+
     title = models.CharField(max_length=1023)
     description = models.TextField()
     thumbnailURL = models.URLField(max_length = 200)
