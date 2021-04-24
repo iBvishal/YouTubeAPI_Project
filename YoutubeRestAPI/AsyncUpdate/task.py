@@ -1,54 +1,36 @@
 import argparse
-
+import requests
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# from YoutubeAPICall.models import Video
-
+DEVELOPER_KEY = 'AIzaSyCGhwD9FguAyV-qguQP8P6ikfFoJZ22pbk'
+YOUTUBE_API_SERVICE_NAME = 'youtube'
+YOUTUBE_API_VERSION = 'v3'
 def youtube_search():
-    pass
-    # DEVELOPER_KEY = 'AIzaSyDMGaY_kIHI7wG3SozMFY3LtJwU3EYzd4k'
-    
-    # search_url = 'https://www.googleapis.com/youtube/v3/search'
-    # video_url = 'https://www.googleapis.com/youtube/v3/videos'
-    
-    # search_params = {
-    #     'part' : 'snippet',
-    #     'q' : 'search',
-    #     'key' : DEVELOPER_KEY,
-    #     'maxResults' : 10,
-    #     'type' : 'video'
-    # }
+    search_url = 'https://www.googleapis.com/youtube/v3/search'
+    video_url = 'https://www.googleapis.com/youtube/v3/videos'
+    videos = []
+    search_params = {
+        'part' : 'snippet',
+        'q' : 'football',
+        'key' : DEVELOPER_KEY,
+        'maxResults' : 30,
+        'type' : 'video'
+    }
+    result = requests.get(search_url, params=search_params)
+    result1 = result.json()['items']
 
-    # r = get(search_url, params=search_params)
-
-    # results = r.json()['items']
-
-    # videos = []
-    # for result in results:
-    #     video_data = {
-    #         'title' : result['snippet']['title'],
-    #         'id' : result['id'],
-    #         'url' : f'https://www.youtube.com/watch?v={ result["id"] }',
-    #         'duration' : int(parse_duration(result['contentDetails']['duration']).total_seconds() // 60),
-    #         'thumbnail' : result['snippet']['thumbnails']['high']['url']
-    #     }
-    #     videos.append(video_data)
-    
-    # print(videos)
-    # for search_result in results:
-    #     # Video.ChannelTitle = search_result['channelId']
-    #     # Video.description = search_result['channelId']
-    #     # Video.PublishedOn = search_result['PublishedOn']
-    #     # Video.thumbnailURL = search_result['thumbnailURL']
-    #     # Video.videoID = search_result['videoID']
-    #     # Video.title = search_result['Title']
-        
-    #     print(search_result['channelId'])
-    #     print(search_result['channelId'])
-    #     print(search_result['PublishedOn'])
-    #     print(search_result['thumbnailURL'])
-    #     print(search_result['videoID'])
-    #     print(search_result['Title'])
+    for search_result in result1:
+        Video = {
+            'videoID' : search_result['id']['videoId'],
+            'ChannelTitle' : search_result['snippet']['channelId'],
+            'title' : search_result['snippet']['title'],
+            'description' : search_result['snippet']['description'],
+            'thumbnailURL' : search_result['snippet']['thumbnails']['high']['url'],
+            'PublishedOn' : search_result['snippet']['publishedAt']
+        }
+        requests.post('http://127.0.0.1:8000/Videos/', Video)
+        print(Video)
+        videos.append(Video)
 
 youtube_search()
