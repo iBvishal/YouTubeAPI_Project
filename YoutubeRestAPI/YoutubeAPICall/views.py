@@ -7,7 +7,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .pagination import VideoLimitOffsetPagination
 
 class VideoViewSet(viewsets.ModelViewSet):
-    queryset = Video.objects.all()
+    queryset = Video.objects.all().order_by("PublishedOn")
     serializer_class = VideoSerializer
     pagination_class = VideoLimitOffsetPagination
     filter_backends = [SearchFilter, OrderingFilter]
